@@ -52,7 +52,7 @@ function Home() {
             <div className="flex flex-col gap-2">
               {session.user && (
                 <Link
-                  to={`/group/message/${group.id}`}
+                  to={`/group/${group.id}/message`}
                   className="p-2 gap-1 border rounded flex border-slate-500 hover:bg-green-500"
                 >
                   <BiMailSend size={25} />
@@ -62,7 +62,7 @@ function Home() {
               {session?.user?.id === group.user_id && (
                 <>
                   <Link
-                    to={`/group/edit/${group.id}`}
+                    to={`/group/${group.id}/edit`}
                     className="p-2 gap-1 border rounded flex border-slate-500 hover:bg-green-500"
                   >
                     <BiEdit size={25} />

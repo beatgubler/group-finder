@@ -31,6 +31,9 @@ function Group() {
       <Column>
         <div className="border p-2 rounded col-start-1 col-span-6 md:col-start-2 md:col-span-4 border-slate-500 bg-mainColor">
           <h1 className="text-xl font-bold pb-4">{id ? "Edit group" : "Add group"}</h1>
+          <div className="pb-4">
+            <p className="text-red-500">Do not share any sensitive information like email, phonenumber, address etc.</p>
+          </div>
           <Formik
             initialValues={{ title: "", description: "", category: "" }}
             onSubmit={async (values) => {
@@ -74,14 +77,14 @@ function Group() {
             })}
             innerRef={formik}
           >
-            {(props: FormikProps<any>) => (
+            {({ isSubmitting, touched, errors }) => (
               <Form className="flex flex-wrap flex-col">
                 <label>Title:</label>
                 <Field
                   type="title"
                   name="title"
                   className={`border w-full rounded bg-mainColor p-2 ${
-                    props.touched.title && props.errors.title ? "border-red-500" : "border-slate-500"
+                    touched.title && errors.title ? "border-red-500" : "border-slate-500"
                   }`}
                 />
                 <ErrorMessage component="p" name="title" className="text-red-500 text-xs" />
@@ -92,7 +95,7 @@ function Group() {
                   type="description"
                   name="description"
                   className={`border w-full rounded bg-mainColor p-2 ${
-                    props.touched.description && props.errors.description ? "border-red-500" : "border-slate-500"
+                    touched.description && errors.description ? "border-red-500" : "border-slate-500"
                   }`}
                 />
                 <ErrorMessage component="p" name="description" className="text-red-500 text-xs" />
@@ -102,7 +105,7 @@ function Group() {
                   as="select"
                   name="category"
                   className={`border w-full rounded bg-mainColor p-2  ${
-                    props.touched.category && props.errors.category ? "border-red-500" : "border-slate-500"
+                    touched.category && errors.category ? "border-red-500" : "border-slate-500"
                   }`}
                 >
                   <option value=""></option>
@@ -116,7 +119,8 @@ function Group() {
 
                 <button
                   type="submit"
-                  className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight"
+                  className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit"
+                  disabled={isSubmitting}
                 >
                   Submit
                 </button>

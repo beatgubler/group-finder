@@ -28,6 +28,11 @@ function Message() {
       <Column>
         <div className="border p-2 rounded col-start-1 col-span-6 md:col-start-2 md:col-span-4 border-slate-500 bg-mainColor">
           <h1 className="text-xl font-bold pb-4">Send message to: {group?.title}</h1>
+          <div className="pb-4">
+            <p>Remember to add a way to contact you eg. discord, telegram, etc.</p>
+            <p className="text-red-500">Do not share any sensitive information like email, phonenumber, address etc.</p>
+          </div>
+
           <Formik
             initialValues={{ message: "" }}
             onSubmit={async (values) => {
@@ -53,7 +58,7 @@ function Message() {
             })}
             innerRef={formik}
           >
-            {(props: FormikProps<any>) => (
+            {({ isSubmitting, touched, errors }) => (
               <Form className="flex flex-wrap flex-col">
                 <label>Message:</label>
                 <Field
@@ -61,14 +66,15 @@ function Message() {
                   type="message"
                   name="message"
                   className={`border w-full rounded bg-mainColor p-2 ${
-                    props.touched.message && props.errors.message ? "border-red-500" : "border-slate-500"
+                    touched.message && errors.message ? "border-red-500" : "border-slate-500"
                   }`}
                 />
                 <ErrorMessage component="p" name="message" className="text-red-500 text-xs" />
 
                 <button
                   type="submit"
-                  className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight"
+                  className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit"
+                  disabled={isSubmitting}
                 >
                   Submit
                 </button>
