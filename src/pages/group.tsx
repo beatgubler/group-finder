@@ -3,7 +3,7 @@ import Column from "../layout/column";
 import { ErrorMessage, Field, Form, Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
 
@@ -11,6 +11,8 @@ function Group() {
   const { id } = useParams();
   const formik = useRef<any>();
   const navigate = useNavigate();
+  const [formError, setFormError] = useState<string>();
+  const [formSuccess, setFormSuccess] = useState<string>();
 
   useEffect(() => {
     if (id) {
@@ -37,13 +39,33 @@ function Group() {
                 await supabase
                   .from("groups")
                   .update({ title: values.title, desc: values.description, category: values.category })
-                  .eq("id", id);
-                navigate("/");
+                  .eq("id", id)
+                  .then((res) => {
+                    if (!res.error) {
+                      setFormSuccess("group updated");
+                      setFormError("");
+                    } else {
+                      setFormError("error updating group");
+                      setFormSuccess("");
+                    }
+                    formik.current.resetForm();
+                  });
+                // navigate("/");
               } else {
                 await supabase
                   .from("groups")
-                  .insert([{ title: values.title, desc: values.description, category: values.category }]);
-                navigate("/");
+                  .insert([{ title: values.title, desc: values.description, category: values.category }])
+                  .then((res) => {
+                    if (!res.error) {
+                      setFormSuccess("group created");
+                      setFormError("");
+                    } else {
+                      setFormError("error creating group");
+                      setFormSuccess("");
+                    }
+                    formik.current.resetForm();
+                  });
+                // navigate("/");
               }
             }}
             validationSchema={Yup.object({
@@ -99,6 +121,8 @@ function Group() {
                 >
                   Submit
                 </button>
+                {formError ? <p className="text-red-500 text-xs">{formError}</p> : null}
+                {formSuccess ? <p className="text-green-500 text-xs">{formSuccess}</p> : null}
               </Form>
             )}
           </Formik>

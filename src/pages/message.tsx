@@ -12,6 +12,7 @@ function Message() {
   const [group, setGroup] = useState<{ [x: string]: any } | null>();
   const formik = useRef<any>();
   const [formError, setFormError] = useState<string>();
+  const [formSuccess, setFormSuccess] = useState<string>();
 
   useEffect(() => {
     getGroup();
@@ -39,9 +40,8 @@ function Message() {
                   text: values.message,
                 }),
               }).then((res) => {
-                console.log(res);
                 if (res.ok) {
-                  setFormError("message sent successfully");
+                  setFormSuccess("message sent successfully");
                 } else {
                   setFormError("error when sending mail");
                 }
@@ -73,6 +73,7 @@ function Message() {
                   Submit
                 </button>
                 {formError ? <p className="text-red-500 text-xs">{formError}</p> : null}
+                {formSuccess ? <p className="text-green-500 text-xs">{formSuccess}</p> : null}
               </Form>
             )}
           </Formik>
