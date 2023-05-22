@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import Column from "../layout/column";
 import { ErrorMessage, Field, Form, Formik, FormikProps } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
@@ -10,7 +10,6 @@ const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env
 function Group() {
   const { id } = useParams();
   const formik = useRef<any>();
-  const navigate = useNavigate();
   const [formError, setFormError] = useState<string>();
   const [formSuccess, setFormSuccess] = useState<string>();
 
