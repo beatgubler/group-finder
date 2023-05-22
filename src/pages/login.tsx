@@ -5,7 +5,7 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 import { useDispatch } from "react-redux";
 import { setSession } from "../redux/authSlice";
-import { ErrorMessage, Field, Form, Formik, FormikProps } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";

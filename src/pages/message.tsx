@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Column from "../layout/column";
-import { ErrorMessage, Field, Form, Formik, FormikProps } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
