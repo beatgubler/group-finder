@@ -34,7 +34,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen text-slate-300 bg-mainColorDark">
+      <div className="min-h-screen text-slate-300 bg-mainColorDark min-w-[350px]">
         <Navigation />
         <div className="py-4">
           <Outlet />

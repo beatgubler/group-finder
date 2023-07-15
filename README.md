@@ -13,7 +13,7 @@ Feel free to leave your suggestions, problems, safety concerns or questions in t
 - styling with tailwind
 - local authentication
 - persistent login
-- send messages to groups
+- send messages to group owners
 
 #### Livepreview: [https://group-finder.gubler-it.com//](https://group-finder.gubler-it.com/)
 
@@ -28,6 +28,23 @@ TBD
 - Install NodeJS -> https://nodejs.org/en/download/
 - Clone this project with **git clone https://github.com/beatgubler/osbapp.io.git** or download manually
   **npm install** -> **ng serve**
+
+## local environment variables
+
+### supabase
+
+- VITE_SUPABASE_URL=string
+- VITE_SUPABASE_KEY=string
+- VITE_SUPABASE_SERVICEROLE=string
+
+### mailgun
+
+- MAILGUN_API_URL=string
+- MAILGUN_API_KEY=string
+
+### hcaptcha
+
+- VITE_HCAPTCHA_KEY=string
 
 ## Notable external dependencies
 

@@ -80,6 +80,7 @@ function Home() {
             </div>
           </div>
         ))}
+        {!groups && <div className="col-span-6">Error while getting groups from database...</div>}
       </Column>
     </>
   );
