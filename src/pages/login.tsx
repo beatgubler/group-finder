@@ -66,26 +66,30 @@ function Login() {
             innerRef={formik}
           >
             {({ isSubmitting, touched, errors }) => (
-              <Form className="flex flex-wrap flex-col">
-                <label>Email:</label>
-                <Field
-                  type="email"
-                  name="email"
-                  className={`border w-full rounded bg-mainColor p-2 ${
-                    touched.email && errors.email ? "border-red-500" : "border-slate-500"
-                  }`}
-                />
-                <ErrorMessage component="p" name="email" className="text-red-500 text-xs" />
+              <Form className="flex flex-wrap flex-col gap-2">
+                <div>
+                  <label>Email:</label>
+                  <Field
+                    type="email"
+                    name="email"
+                    className={`border w-full rounded bg-mainColor p-2 ${
+                      touched.email && errors.email ? "border-red-500" : "border-slate-500"
+                    }`}
+                  />
+                  <ErrorMessage component="p" name="email" className="text-red-500 text-xs" />
+                </div>
 
-                <label>Password:</label>
-                <Field
-                  type="password"
-                  name="password"
-                  className={`border w-full rounded bg-mainColor p-2 ${
-                    touched.password && errors.password ? "border-red-500" : "border-slate-500"
-                  }`}
-                />
-                <ErrorMessage component="p" name="password" className="text-red-500 text-xs" />
+                <div>
+                  <label>Password:</label>
+                  <Field
+                    type="password"
+                    name="password"
+                    className={`border w-full rounded bg-mainColor p-2 ${
+                      touched.password && errors.password ? "border-red-500" : "border-slate-500"
+                    }`}
+                  />
+                  <ErrorMessage component="p" name="password" className="text-red-500 text-xs" />
+                </div>
 
                 <div className="pt-4">
                   <HCaptcha

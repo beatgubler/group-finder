@@ -41,7 +41,7 @@ function Home() {
             key={group.id}
             className="border p-2 rounded flex gap-2 col-span-6 items-start bg-mainColor border-slate-500"
           >
-            <img className="h-28 rounded aspect-square object-cover" src={getImageUrl("image001.jpg")}></img>
+            <img className="h-28 rounded aspect-square object-cover" src={getImageUrl(group.id + ".png")}></img>
             <div className="w-full flex flex-col gap-2">
               <h1 className="text-lg font-bold">{group.title}</h1>
               <p className="text-sm  italic">
