@@ -4,7 +4,7 @@ This is a react app to connect with groups and find new peers. Features a supaba
 
 Feel free to leave your suggestions, problems, safety concerns or questions in the respected section here on Github.
 
-[Netlify Status](https://api.netlify.com/api/v1/badges/8844f02e-606e-4fc1-bbbf-7788d4227782/deploy-status)
+![Netlify Status](https://api.netlify.com/api/v1/badges/8844f02e-606e-4fc1-bbbf-7788d4227782/deploy-status)
 
 ## Features:
 
