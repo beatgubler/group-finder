@@ -30,7 +30,7 @@ function Group() {
 
   async function getGroup() {
     const { data } = await supabase.from("groups").select().eq("id", id).limit(1).single();
-    formik.current.setValues({ title: data?.title, description: data?.desc, category: data?.category });
+    formik.current.setValues({ title: data?.title, description: data?.desc, category: data?.category, picture: "set" });
   }
 
   async function insertGroup(data: { title: string; desc: string; category: string }) {
@@ -109,9 +109,6 @@ function Group() {
           <Formik
             initialValues={{ title: "", description: "", category: "", picture: "" }}
             onSubmit={async (values) => {
-              if (!file) {
-                return;
-              }
               if (id) {
                 await updateGroup({ title: values.title, desc: values.description, category: values.category });
               } else {
@@ -172,7 +169,7 @@ function Group() {
 
                 <div>
                   <label>Group picture:</label>
-                  {id && (
+                  {id && !touched.picture && (
                     <img className="h-28 py-2 rounded aspect-square object-cover" src={getImageUrl(id + ".png")}></img>
                   )}
                   <input
@@ -190,6 +187,7 @@ function Group() {
                           setFieldValue("picture", "", true);
                         } else {
                           setFile(e.target.files[0]);
+                          setTouched({ ...touched, picture: true });
                           setFieldValue("picture", "set", true);
                         }
                       }
