@@ -23,9 +23,14 @@ function Home() {
     return data.publicUrl;
   }
 
-  async function getGroups() {
-    const { data } = await supabase.from("groups").select().order("created_at");
-    setGroups(data);
+  async function getGroups(category?: string) {
+    if (category) {
+      const { data } = await supabase.from("groups").select().eq("category", category).order("created_at");
+      setGroups(data);
+    } else {
+      const { data } = await supabase.from("groups").select().order("created_at");
+      setGroups(data);
+    }
   }
 
   async function _handleDelete(groupID: number) {
@@ -36,6 +41,22 @@ function Home() {
   return (
     <>
       <Column>
+        <div className="col-span-6 flex gap-4 items-center">
+          Category:
+          <select
+            name="category"
+            className="border w-full rounded bg-mainColor p-2"
+            onChange={(e) => getGroups(e.target.value)}
+          >
+            <option value=""></option>
+            <option value="hobby">hobby</option>
+            <option value="outdoor">outdoor</option>
+            <option value="gaming">gaming</option>
+            <option value="friendship">friendship</option>
+            <option value="other">...other</option>
+          </select>
+        </div>
+
         {groups?.map((group: any) => (
           <div
             key={group.id}
