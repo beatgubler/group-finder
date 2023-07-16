@@ -35,6 +35,7 @@ function Home() {
 
   async function _handleDelete(groupID: number) {
     await supabase.from("groups").delete().match({ id: groupID });
+    await supabase.storage.from("images").remove([groupID + ".png"]);
     getGroups();
   }
 
