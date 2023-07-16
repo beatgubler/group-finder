@@ -126,7 +126,7 @@ function Group() {
             })}
             innerRef={formik}
           >
-            {({ isSubmitting, touched, errors, setFieldValue, setTouched, setErrors }) => (
+            {({ isSubmitting, touched, errors, setFieldValue, setTouched }) => (
               <Form className="flex flex-wrap flex-col gap-2">
                 <div>
                   <label>Title:</label>
