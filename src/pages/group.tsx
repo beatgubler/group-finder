@@ -11,7 +11,6 @@ function Group() {
   const { id } = useParams();
   const formik = useRef<any>();
   const [formError, setFormError] = useState<string>();
-  const [formSubmitting, setFormSubmitting] = useState<boolean>();
   const [formSuccess, setFormSuccess] = useState<string>();
   const [file, setFile] = useState<File>();
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ function Group() {
   }
 
   async function insertGroup(data: { title: string; desc: string; category: string }) {
-    let group;
+    let group: any;
     await supabase
       .from("groups")
       .insert([data])
@@ -48,10 +47,10 @@ function Group() {
           setFormSuccess("");
         }
       });
-    if (group) {
+    if (group?.data[0]) {
       await supabase.storage
         .from("images")
-        .upload(group.data[0].id + ".png", file, {
+        .upload(group.data[0].id + ".png", file as File, {
           upsert: false,
         })
         .then((res) => {
@@ -69,14 +68,13 @@ function Group() {
   }
 
   async function updateGroup(data: { title: string; desc: string; category: string }) {
-    let group;
     await supabase
       .from("groups")
       .update(data)
       .eq("id", id)
       .then((res) => {
         if (!res.error) {
-          console.log("updated");
+          return;
         } else {
           setFormError("error updating group");
           setFormSuccess("");
@@ -84,7 +82,7 @@ function Group() {
       });
     await supabase.storage
       .from("images")
-      .upload(id + ".png", file, {
+      .upload(id + ".png", file as File, {
         upsert: true,
       })
       .then((res) => {
@@ -124,11 +122,11 @@ function Group() {
               title: Yup.string().min(4).required(),
               description: Yup.string().min(4).required(),
               category: Yup.string().required(),
-              picture: Yup.string().required(),
+              picture: Yup.string().required("field is required or file is too big, max. 1MB"),
             })}
             innerRef={formik}
           >
-            {({ isSubmitting, touched, errors, setFieldValue }) => (
+            {({ isSubmitting, touched, errors, setFieldValue, setTouched, setErrors }) => (
               <Form className="flex flex-wrap flex-col gap-2">
                 <div>
                   <label>Title:</label>
@@ -183,9 +181,18 @@ function Group() {
                     className={`border w-full rounded bg-mainColor p-2  ${
                       touched.picture && errors.picture ? "border-red-500" : "border-slate-500"
                     }`}
-                    onChange={(e) => {
-                      setFile(e.target.files[0]);
-                      setFieldValue("picture", "true", true);
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const allowedSizeMB = 1;
+                      const allowedSizeBytes = allowedSizeMB * 1024 * 1024;
+                      if (e.target.files) {
+                        if (e.target.files[0].size > allowedSizeBytes) {
+                          setTouched({ ...touched, picture: true });
+                          setFieldValue("picture", "", true);
+                        } else {
+                          setFile(e.target.files[0]);
+                          setFieldValue("picture", "set", true);
+                        }
+                      }
                     }}
                   />
                   <Field name="picture" className="hidden"></Field>
