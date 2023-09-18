@@ -117,7 +117,6 @@ function Login() {
                     href="#"
                     onClick={() => setIsRegister(!isRegister)}
                     className=" p-2 mt-4 rounded cursor-pointer "
-                    disabled={isSubmitting}
                   >
                     {!isRegister ? <>Register</> : <>Login</>}
                   </a>
