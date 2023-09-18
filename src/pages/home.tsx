@@ -61,9 +61,11 @@ function Home() {
         {groups?.map((group: any) => (
           <div
             key={group.id}
-            className="border p-2 rounded flex gap-2 col-span-6 items-start bg-mainColor border-slate-500"
+            className="group border p-2 rounded flex gap-2 col-span-6 items-start bg-mainColor border-slate-500"
           >
-            <img className="h-28 rounded aspect-square object-cover" src={getImageUrl(group.id + ".png")}></img>
+            <div className="w-80 rounded overflow-hidden">
+              <img className="group-hover:scale-110 duration-300" src={getImageUrl(group.id + ".png")}></img>
+            </div>
             <div className="w-full flex flex-col gap-2">
               <h1 className="text-lg font-bold">{group.title}</h1>
               <p className="text-sm  italic">
@@ -85,7 +87,7 @@ function Home() {
                 <>
                   <Link
                     to={`/group/${group.id}/edit`}
-                    className="p-2 gap-1 border rounded flex border-slate-500 hover:bg-green-500"
+                    className="p-2 gap-1 border rounded flex border-slate-500 hover:bg-orange-500"
                   >
                     <BiEdit size={25} />
                     Edit

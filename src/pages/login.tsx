@@ -113,14 +113,14 @@ function Login() {
                   >
                     {isRegister ? <>Register</> : <>Login</>}
                   </button>
-                  <button
-                    type="button"
+                  <a
+                    href="#"
                     onClick={() => setIsRegister(!isRegister)}
-                    className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit"
+                    className=" p-2 mt-4 rounded cursor-pointer "
                     disabled={isSubmitting}
                   >
-                    change to {!isRegister ? <>Register</> : <>Login</>}
-                  </button>
+                    {!isRegister ? <>Register</> : <>Login</>}
+                  </a>
                 </div>
                 {formError ? <p className="text-red-500 text-xs">{formError}</p> : null}
               </Form>
