@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Column from "../layout/column";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { BiLogoGoogle } from "react-icons/bi";
 
 import { useDispatch } from "react-redux";
 import { setSession } from "../redux/authSlice";
@@ -10,7 +11,10 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_KEY
+);
 
 function Login() {
   const [isRegister, setIsRegister] = useState<boolean>(false);
@@ -20,6 +24,12 @@ function Login() {
   const formik = useRef<any>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  function GoogleLogin() {
+    supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+  }
 
   return (
     <>
@@ -73,10 +83,16 @@ function Login() {
                     type="email"
                     name="email"
                     className={`border w-full rounded bg-mainColor p-2 ${
-                      touched.email && errors.email ? "border-red-500" : "border-slate-500"
+                      touched.email && errors.email
+                        ? "border-red-500"
+                        : "border-slate-500"
                     }`}
                   />
-                  <ErrorMessage component="p" name="email" className="text-red-500 text-xs" />
+                  <ErrorMessage
+                    component="p"
+                    name="email"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
 
                 <div>
@@ -85,13 +101,19 @@ function Login() {
                     type="password"
                     name="password"
                     className={`border w-full rounded bg-mainColor p-2 ${
-                      touched.password && errors.password ? "border-red-500" : "border-slate-500"
+                      touched.password && errors.password
+                        ? "border-red-500"
+                        : "border-slate-500"
                     }`}
                   />
-                  <ErrorMessage component="p" name="password" className="text-red-500 text-xs" />
+                  <ErrorMessage
+                    component="p"
+                    name="password"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
 
-                <div className="pt-4">
+                <div className="">
                   <HCaptcha
                     ref={captcha}
                     sitekey={import.meta.env.VITE_HCAPTCHA_KEY}
@@ -102,26 +124,43 @@ function Login() {
                     theme="dark"
                   />
                   <Field className="hidden" name="captcha" type="captcha" />
-                  <ErrorMessage component="p" name="captcha" className="text-red-500 text-xs" />
+                  <ErrorMessage
+                    component="p"
+                    name="captcha"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
 
-                <div className="flex gap-2 justify-between">
+                <div className="flex gap-2 items-center">
                   <button
                     type="submit"
-                    className="border p-2 mt-4 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit"
+                    className="border p-2 rounded cursor-pointer bg-slate-600 border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit"
                     disabled={isSubmitting}
                   >
                     {isRegister ? <>Register</> : <>Login</>}
                   </button>
                   <a
+                    className="border p-2 rounded cursor-pointer border-slate-500 hover:bg-mainColorLight disabled:cursor-wait disabled:hover:bg-inherit flex gap-2"
+                    onClick={() => GoogleLogin()}
+                  >
+                    <BiLogoGoogle size={25} />
+                    Login with Google
+                  </a>
+                  <a
                     href="#"
                     onClick={() => setIsRegister(!isRegister)}
-                    className=" p-2 mt-4 rounded cursor-pointer "
+                    className="rounded cursor-pointer "
                   >
-                    {!isRegister ? <>Register</> : <>Login</>}
+                    {!isRegister ? (
+                      <>You don't have an account yet? Click here.</>
+                    ) : (
+                      <>You already have an account? Click here.</>
+                    )}
                   </a>
                 </div>
-                {formError ? <p className="text-red-500 text-xs">{formError}</p> : null}
+                {formError ? (
+                  <p className="text-red-500 text-xs">{formError}</p>
+                ) : null}
               </Form>
             )}
           </Formik>
