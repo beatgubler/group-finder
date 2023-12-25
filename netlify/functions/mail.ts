@@ -1,38 +1,48 @@
-import { Handler, HandlerEvent } from "@netlify/functions";
+import { Handler } from "@netlify/functions";
+import nodemailer from "nodemailer";
 import { createClient } from "@supabase/supabase-js";
 
-import formData from "form-data";
-import Mailgun from "mailgun.js";
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL as string,
+  process.env.VITE_SUPABASE_SERVICEROLE as string
+);
 
-const mailgun = new Mailgun(formData);
-const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY || "key-yourkeyhere" });
-const supabase = createClient(process.env.VITE_SUPABASE_URL as string, process.env.VITE_SUPABASE_SERVICEROLE as string);
+const transporter = nodemailer.createTransport({
+  host: process.env.VITE_NODEMAILER_HOST,
+  port: 465,
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: process.env.VITE_NODEMAILER_USER,
+    pass: process.env.VITE_NODEMAILER_PASS,
+  },
+});
 
-const handler: Handler = async (event: HandlerEvent) => {
+const handler: Handler = async (event, context) => {
   const data = JSON.parse(event.body as string);
-
   const user = await supabase.auth.admin.getUserById(data.to);
-
-  return mg.messages
-    .create(process.env.MAILGUN_API_URL as string, {
-      from: data.from,
+  try {
+    // Email content
+    const mailOptions = {
+      from: "admin@gubler-it.com",
       to: user.data.user?.email,
       subject: data.subject,
       text: data.text,
       html: `<h1>Message:</h1><p>${data.text}</p>`,
-    })
-    .then((msg) => ({
+    };
+
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
+
+    return {
       statusCode: 200,
-      body: JSON.stringify({
-        data: "mail sent",
-      }),
-    })) // logs response data
-    .catch((err) => ({
+      body: JSON.stringify({ message: "Email sent successfully", info }),
+    };
+  } catch (error) {
+    return {
       statusCode: 500,
-      body: JSON.stringify({
-        data: "error",
-      }),
-    }));
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
 };
 
 export { handler };
