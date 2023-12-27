@@ -8,11 +8,16 @@ import { RootState } from "../store";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_KEY
+);
 
 function Home() {
   const [groups, setGroups] = useState<object[] | null>([]);
-  const session = useSelector((state: RootState) => state.auth.session) as Session;
+  const session = useSelector(
+    (state: RootState) => state.auth.session
+  ) as Session;
 
   useEffect(() => {
     getGroups();
@@ -25,10 +30,17 @@ function Home() {
 
   async function getGroups(category?: string) {
     if (category) {
-      const { data } = await supabase.from("groups").select().eq("category", category).order("created_at");
+      const { data } = await supabase
+        .from("groups")
+        .select()
+        .eq("category", category)
+        .order("created_at");
       setGroups(data);
     } else {
-      const { data } = await supabase.from("groups").select().order("created_at");
+      const { data } = await supabase
+        .from("groups")
+        .select()
+        .order("created_at");
       setGroups(data);
     }
   }
@@ -64,12 +76,16 @@ function Home() {
             className="group border p-2 rounded flex gap-2 col-span-6 items-start bg-mainColor border-slate-500"
           >
             <div className="w-80 rounded overflow-hidden">
-              <img className="group-hover:scale-110 duration-300" src={getImageUrl(group.id + ".png")}></img>
+              <img
+                className="group-hover:scale-110 duration-300"
+                src={getImageUrl(group.id + ".png")}
+              ></img>
             </div>
             <div className="w-full flex flex-col gap-2">
               <h1 className="text-lg font-bold">{group.title}</h1>
               <p className="text-sm  italic">
-                <DateTime timestamp={group.created_at} /> | Category: {group.category}
+                <DateTime timestamp={group.created_at} /> | Category:{" "}
+                {group.category}
               </p>
               <p>{group.desc}</p>
             </div>
@@ -101,10 +117,19 @@ function Home() {
                   </button>
                 </>
               )}
+              {!session.user && (
+                <>
+                  <small>Please login to message this group.</small>
+                </>
+              )}
             </div>
           </div>
         ))}
-        {!groups && <div className="col-span-6">Error while getting groups from database...</div>}
+        {!groups && (
+          <div className="col-span-6">
+            Error while getting groups from database...
+          </div>
+        )}
       </Column>
     </>
   );

@@ -23,9 +23,9 @@ const handler: Handler = async (event, context) => {
   try {
     // Email content
     const mailOptions = {
-      from: "admin@gubler-it.com",
+      from: "Group Finder Message <admin@gubler-it.com>",
       to: user.data.user?.email,
-      subject: data.subject,
+      subject: "New message for: " + data.group + " - via group-finder.com",
       text: data.text,
       html: `<h1>Message:</h1><p>${data.text}</p>`,
     };

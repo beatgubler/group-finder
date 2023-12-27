@@ -5,7 +5,10 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY);
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_KEY
+);
 
 function Message() {
   const { id } = useParams();
@@ -19,7 +22,12 @@ function Message() {
   }, []);
 
   async function getGroup() {
-    const { data } = await supabase.from("groups").select().eq("id", id).limit(1).single();
+    const { data } = await supabase
+      .from("groups")
+      .select()
+      .eq("id", id)
+      .limit(1)
+      .single();
     setGroup(data);
   }
 
@@ -27,10 +35,17 @@ function Message() {
     <>
       <Column>
         <div className="border p-2 rounded col-start-1 col-span-6 md:col-start-2 md:col-span-4 border-slate-500 bg-mainColor">
-          <h1 className="text-xl font-bold pb-4">Send message to: {group?.title}</h1>
+          <h1 className="text-xl font-bold pb-4">
+            Send message to: {group?.title}
+          </h1>
           <div className="pb-4">
-            <p>Remember to add a way to contact you eg. discord, telegram, etc.</p>
-            <p className="text-red-500">Do not share any sensitive information like email, phonenumber, address etc.</p>
+            <p>
+              Remember to add a way to contact you eg. discord, telegram, etc.
+            </p>
+            <p className="text-red-500">
+              Do not share any sensitive information like email, phonenumber,
+              address etc.
+            </p>
           </div>
 
           <Formik
@@ -39,9 +54,8 @@ function Message() {
               await fetch("/.netlify/functions/mail", {
                 method: "POST",
                 body: JSON.stringify({
-                  from: "group-finder@gubler-it.com",
                   to: group?.user_id,
-                  subject: "Someone sent a message to your group: " + group?.title,
+                  group: group?.title,
                   text: values.message,
                 }),
               }).then((res) => {
@@ -60,16 +74,22 @@ function Message() {
           >
             {({ isSubmitting, touched, errors }) => (
               <Form className="flex flex-wrap flex-col">
-                <label>Message:</label>
+                <label>Message:*</label>
                 <Field
                   as="textarea"
                   type="message"
                   name="message"
                   className={`border w-full rounded bg-mainColor p-2 ${
-                    touched.message && errors.message ? "border-red-500" : "border-slate-500"
+                    touched.message && errors.message
+                      ? "border-red-500"
+                      : "border-slate-500"
                   }`}
                 />
-                <ErrorMessage component="p" name="message" className="text-red-500 text-xs" />
+                <ErrorMessage
+                  component="p"
+                  name="message"
+                  className="text-red-500 text-xs"
+                />
 
                 <button
                   type="submit"
@@ -78,8 +98,12 @@ function Message() {
                 >
                   Submit
                 </button>
-                {formError ? <p className="text-red-500 text-xs">{formError}</p> : null}
-                {formSuccess ? <p className="text-green-500 text-xs">{formSuccess}</p> : null}
+                {formError ? (
+                  <p className="text-red-500 text-xs">{formError}</p>
+                ) : null}
+                {formSuccess ? (
+                  <p className="text-green-500 text-xs">{formSuccess}</p>
+                ) : null}
               </Form>
             )}
           </Formik>
