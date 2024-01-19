@@ -2,7 +2,7 @@ import { Session, createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import Column from "../layout/column";
 
-import { BiTrash, BiMailSend, BiEdit } from "react-icons/bi";
+import { BiTrash, BiMailSend, BiEdit, BiSearch } from "react-icons/bi";
 import DateTime from "../components/date-time";
 import { RootState } from "../store";
 import { useSelector } from "react-redux";
@@ -15,6 +15,8 @@ const supabase = createClient(
 
 function Home() {
   const [groups, setGroups] = useState<object[] | null>([]);
+  const [searchString, setSearchString] = useState<string>("");
+  const [searchCategory, setSearchCategory] = useState<string>("");
   const session = useSelector(
     (state: RootState) => state.auth.session
   ) as Session;
@@ -28,7 +30,20 @@ function Home() {
     return data.publicUrl;
   }
 
-  async function getGroups(category?: string) {
+  function search() {
+    getGroups(searchCategory, searchString);
+  }
+
+  async function getGroups(category?: string, searchString?: string) {
+    if (searchString) {
+      const { data } = await supabase
+        .from("groups")
+        .select()
+        .ilike("title", `*${searchString}*`)
+        .order("created_at");
+      setGroups(data);
+      return;
+    }
     if (category) {
       const { data } = await supabase
         .from("groups")
@@ -36,13 +51,20 @@ function Home() {
         .eq("category", category)
         .order("created_at");
       setGroups(data);
-    } else {
+      return;
+    }
+    if (searchString && category) {
       const { data } = await supabase
         .from("groups")
         .select()
+        .eq("category", category)
+        .like("title", searchString)
         .order("created_at");
       setGroups(data);
+      return;
     }
+    const { data } = await supabase.from("groups").select().order("created_at");
+    setGroups(data);
   }
 
   async function _handleDelete(groupID: number) {
@@ -54,12 +76,23 @@ function Home() {
   return (
     <>
       <Column>
-        <div className="col-span-6 flex gap-4 items-center">
+        <form
+          className="col-span-6 flex gap-4 flex-col sm:flex-row sm:items-center"
+          onSubmit={(e) => {
+            e.preventDefault();
+            search();
+          }}
+        >
+          Search:
+          <input
+            className="border w-full rounded bg-mainColor p-2 disabled"
+            onChange={(e) => setSearchString(e.target.value)}
+          ></input>
           Category:
           <select
             name="category"
             className="border w-full rounded bg-mainColor p-2"
-            onChange={(e) => getGroups(e.target.value)}
+            onChange={(e) => setSearchCategory(e.target.value)}
           >
             <option value=""></option>
             <option value="hobby">hobby</option>
@@ -68,7 +101,11 @@ function Home() {
             <option value="friendship">friendship</option>
             <option value="other">...other</option>
           </select>
-        </div>
+          <button className="p-2 gap-1 border rounded flex border-slate-500 hover:bg-slate-700">
+            <BiSearch size={25} />
+            Search
+          </button>
+        </form>
 
         {groups?.map((group: any) => (
           <div
