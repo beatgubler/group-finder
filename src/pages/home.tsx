@@ -13,8 +13,17 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_KEY
 );
 
+type IGroup = {
+  id: string;
+  title: string;
+  created_at: string;
+  desc: string;
+  category: string;
+  user_id: string;
+};
+
 function Home() {
-  const [groups, setGroups] = useState<object[] | null>([]);
+  const [groups, setGroups] = useState<{ [x: string]: any } | null>();
   const [searchString, setSearchString] = useState<string>("");
   const [searchCategory, setSearchCategory] = useState<string>("");
   const session = useSelector(
@@ -67,7 +76,7 @@ function Home() {
     setGroups(data);
   }
 
-  async function _handleDelete(groupID: number) {
+  async function _handleDelete(groupID: string) {
     await supabase.from("groups").delete().match({ id: groupID });
     await supabase.storage.from("images").remove([groupID + ".png"]);
     getGroups();
@@ -107,7 +116,7 @@ function Home() {
           </button>
         </form>
 
-        {groups?.map((group: any) => (
+        {groups?.map((group: IGroup) => (
           <div
             key={group.id}
             className="group border p-2 rounded flex gap-2 col-span-6 items-start bg-mainColor border-slate-500"
