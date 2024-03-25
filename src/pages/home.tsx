@@ -44,6 +44,16 @@ function Home() {
   }
 
   async function getGroups(category?: string, searchString?: string) {
+    if (searchString && category) {
+      const { data } = await supabase
+        .from("groups")
+        .select()
+        .ilike("title", `*${searchString}*`)
+        .eq("category", category)
+        .order("created_at");
+      setGroups(data);
+      return;
+    }
     if (searchString) {
       const { data } = await supabase
         .from("groups")
@@ -62,16 +72,7 @@ function Home() {
       setGroups(data);
       return;
     }
-    if (searchString && category) {
-      const { data } = await supabase
-        .from("groups")
-        .select()
-        .eq("category", category)
-        .like("title", searchString)
-        .order("created_at");
-      setGroups(data);
-      return;
-    }
+
     const { data } = await supabase.from("groups").select().order("created_at");
     setGroups(data);
   }

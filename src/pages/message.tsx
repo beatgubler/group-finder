@@ -43,7 +43,7 @@ function Message() {
               Remember to add a way to contact you eg. discord, telegram, etc.
             </p>
             <p className="text-red-500">
-              Do not share any sensitive information like email, phonenumber,
+              Never share any sensitive information like email, phonenumber,
               address etc.
             </p>
           </div>
